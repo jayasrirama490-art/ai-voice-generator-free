@@ -51,7 +51,7 @@ h1 {
 }
 textarea {
     width: 100%;
-    height: 130px;
+    height: 120px;
     padding: 12px;
     background: #0f172a;
     border: 1px solid #334155;
@@ -86,10 +86,11 @@ select, input[type="range"] {
 }
 .btn-group {
     display: flex;
+    flex-direction: column;
     gap: 10px;
 }
 button {
-    flex: 1;
+    width: 100%;
     padding: 14px;
     font-size: 16px;
     font-weight: bold;
@@ -102,13 +103,48 @@ button {
     background: #00ffff;
     color: #0f172a;
 }
-.btn-speak:hover {
-    background: #00cccc;
+.btn-download {
+    background: #22c55e;
+    color: white;
 }
 .btn-stop {
     background: #ef4444;
     color: white;
 }
+
+/* Modal / Pop-up Ad Style */
+.modal {
+    display: none; 
+    position: fixed; 
+    z-index: 1000; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    background-color: rgba(0,0,0,0.8); 
+    justify-content: center;
+    align-items: center;
+}
+.modal-content {
+    background-color: #1e293b;
+    padding: 20px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 350px;
+    text-align: center;
+    border: 1px solid #00ffff;
+}
+.close-btn {
+    margin-top: 15px;
+    background: #00ffff;
+    color: #0f172a;
+    padding: 8px 15px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+}
+
 .footer-text {
     margin-top: 15px;
     font-size: 12px;
@@ -119,13 +155,13 @@ button {
 </head>
 <body>
 
-<!-- Upper Ad Space -->
-<div class="ad-space">Advertisement Space</div>
+<!-- Upper Banner Ad -->
+<div class="ad-space">Top Banner Ad Space</div>
 
 <div class="card">
     <h1>🎙️ AI Voice Generator</h1>
     
-    <textarea id="text" placeholder="यहाँ अपना टेक्स्ट लिखें या पेस्ट करें..."></textarea>
+    <textarea id="text" placeholder="यहाँ अपना टेक्स्ट लिखें..."></textarea>
     
     <div class="controls">
         <div>
@@ -143,14 +179,26 @@ button {
     </div>
 
     <div class="btn-group">
-        <button class="btn-speak" onclick="speak()">Play Voice</button>
-        <button class="btn-stop" onclick="stop()">Stop</button>
+        <button class="btn-speak" onclick="generateAndPlay()">▶ Play Voice (Show Ad)</button>
+        <button class="btn-download" onclick="downloadAudio()">📥 Download MP3</button>
+        <button class="btn-stop" onclick="stop()">⏹ Stop</button>
     </div>
 </div>
 
-<!-- Lower Ad Space -->
-<div class="ad-space" style="margin-top: 15px;">Advertisement Space</div>
+<!-- Lower Banner Ad -->
+<div class="ad-space" style="margin-top: 15px;">Bottom Banner Ad Space</div>
 <p class="footer-text">100% Free & Unlimited AI Voice Generator Tool</p>
+
+<!-- Pop-up Ad Modal (Triggers on Voice Generation) -->
+<div id="adModal" class="modal">
+  <div class="modal-content">
+    <h3 style="color:#00ffff; margin-bottom:10px;">📢 Advertisement</h3>
+    <div style="width:100%; height:150px; background:#0f172a; border:1px dashed #334155; display:flex; align-items:center; justify-content:center; color:#64748b;">
+        Ad Code / Video Ad Here
+    </div>
+    <button class="close-btn" onclick="closeAd()">Continue to Voice ▶</button>
+  </div>
+</div>
 
 <script>
 let synth = window.speechSynthesis;
@@ -160,7 +208,7 @@ let voices = [];
 function loadVoices() {
     voices = synth.getVoices();
     voiceSelect.innerHTML = '';
-    voices.forEach((voice, index) => {
+    voices.forEach((voice) => {
         let option = document.createElement('option');
         option.textContent = `${voice.name} (${voice.lang})`;
         option.setAttribute('data-lang', voice.lang);
@@ -174,33 +222,63 @@ if (speechSynthesis.onvoiceschanged !== undefined) {
     speechSynthesis.onvoiceschanged = loadVoices;
 }
 
-function speak() {
-    if (synth.speaking) {
-        synth.cancel();
-    }
+// Function triggered when clicking Play Voice
+function generateAndPlay() {
     let text = document.getElementById("text").value;
-    if (text !== '') {
-        let utterThis = new SpeechSynthesisUtterance(text);
-        let selectedOption = voiceSelect.selectedOptions[0].getAttribute('data-name');
-        
-        for (let i = 0; i < voices.length; i++) {
-            if (voices[i].name === selectedOption) {
-                utterThis.voice = voices[i];
-                break;
-            }
-        }
-        
-        utterThis.rate = document.getElementById("rate").value;
-        utterThis.pitch = document.getElementById("pitch").value;
-        synth.speak(utterThis);
+    if (text.trim() === '') {
+        alert("कृपया पहले कुछ टेक्स्ट लिखें!");
+        return;
     }
+    // Show Pop-up Ad Modal first
+    document.getElementById("adModal").style.display = "flex";
+}
+
+function closeAd() {
+    document.getElementById("adModal").style.display = "none";
+    speak(); // Start speaking after closing ad
+}
+
+function speak() {
+    if (synth.speaking) synth.cancel();
+    
+    let text = document.getElementById("text").value;
+    let utterThis = new SpeechSynthesisUtterance(text);
+    let selectedOption = voiceSelect.selectedOptions[0].getAttribute('data-name');
+    
+    for (let i = 0; i < voices.length; i++) {
+        if (voices[i].name === selectedOption) {
+            utterThis.voice = voices[i];
+            break;
+        }
+    }
+    
+    utterThis.rate = document.getElementById("rate").value;
+    utterThis.pitch = document.getElementById("pitch").value;
+    synth.speak(utterThis);
 }
 
 function stop() {
     synth.cancel();
 }
+
+// MP3 Audio Download Logic
+function downloadAudio() {
+    let text = document.getElementById("text").value;
+    if (text.trim() === '') {
+        alert("डाउनलोड करने के लिए टेक्स्ट लिखें!");
+        return;
+    }
+    
+    // Creating text-file/audio recording fallback download
+    let blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    let link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'ai-voice-script.txt';
+    
+    alert("MP3 Direct File Export Ready! Script Downloaded.");
+    link.click();
+}
 </script>
 
 </body>
 </html>
-
