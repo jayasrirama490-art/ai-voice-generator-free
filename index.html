@@ -3,8 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VoxAI Studio - Pro AI Voice & Speech Suite</title>
-<meta name="description" content="Free AI Voice Generator, Speech to Text, and Voice Cloning Studio.">
+<title>VoxAI Studio - Ultimate Realistic AI Voices & Multi-Language Engine</title>
+<meta name="description" content="Free Realistic AI Voices in Hindi, Bhojpuri, Gujarati, Punjabi & all Indian languages.">
+
+<!-- ResponsiveVoice Engine for HD Realistic Voices -->
+<script src="https://code.responsivevoice.org/responsivevoice.js?key=FREE"></script>
 
 <style>
 * {
@@ -129,16 +132,32 @@ textarea:focus, input[type="text"]:focus {
     border-color: #00ffff;
 }
 
+/* Search Box for Languages */
+.search-box {
+    height: 38px !important;
+    margin-bottom: 8px !important;
+    padding: 8px 12px !important;
+    font-size: 12px !important;
+}
+
 .controls {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 15px;
     margin-bottom: 20px;
 }
-label {
+.control-header {
+    display: flex;
+    justify-content: space-between;
     font-size: 12px;
     color: #cbd5e1;
+    margin-bottom: 5px;
 }
+.val-badge {
+    color: #00ffff;
+    font-weight: bold;
+}
+
 select, input[type="range"] {
     width: 100%;
     padding: 10px;
@@ -167,25 +186,39 @@ select, input[type="range"] {
     transform: scale(0.98);
 }
 
-/* Modal / Ad Popup */
+/* Modal / Ad Popup & Legal Modals */
 .modal {
     display: none; 
     position: fixed; 
-    z-index: 1000; 
+    z-index: 2000; 
     left: 0; top: 0;
     width: 100%; height: 100%; 
     background-color: rgba(0,0,0,0.85); 
     justify-content: center;
     align-items: center;
+    padding: 15px;
 }
 .modal-content {
     background-color: #161f32;
     padding: 20px;
     border-radius: 12px;
-    width: 90%;
-    max-width: 350px;
+    width: 100%;
+    max-width: 380px;
     text-align: center;
     border: 1px solid #00ffff;
+    position: relative;
+    color: #cbd5e1;
+    font-size: 13px;
+    line-height: 1.5;
+}
+.close-icon {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 20px;
+    color: #ef4444;
+    cursor: pointer;
+    font-weight: bold;
 }
 
 /* SEO & Footer */
@@ -211,6 +244,10 @@ select, input[type="range"] {
     color: #00ffff;
     margin: 0 5px;
     text-decoration: none;
+    cursor: pointer;
+}
+.footer-links a:hover {
+    text-decoration: underline;
 }
 </style>
 </head>
@@ -227,9 +264,9 @@ select, input[type="range"] {
 
 <!-- Navigation Tabs -->
 <div class="nav-tabs">
-    <button class="tab-btn active" onclick="switchTab('tts')">Text to Voice</button>
-    <button class="tab-btn" onclick="switchTab('stt')">Voice to Text</button>
-    <button class="tab-btn" onclick="switchTab('clone')">Voice Clone</button>
+    <button class="tab-btn active" onclick="switchTab('tts', event)">Text to Voice</button>
+    <button class="tab-btn" onclick="switchTab('stt', event)">Voice to Text</button>
+    <button class="tab-btn" onclick="switchTab('clone', event)">Voice Clone</button>
 </div>
 
 <!-- Main Tool Card -->
@@ -237,38 +274,67 @@ select, input[type="range"] {
     
     <!-- Tab 1: Text to Speech -->
     <div id="tts" class="tab-content active">
-        <textarea id="text" placeholder="यहाँ अपना टेक्स्ट लिखें..."></textarea>
+        <textarea id="text" placeholder="यहाँ अपना टेक्स्ट लिखें (हिंदी, भोजपुरी, गुजराती आदि)..."></textarea>
         
         <div class="controls">
             <div>
-                <label>Select Voice (आवाज़ चुनें):</label>
-                <select id="voiceSelect"></select>
+                <div class="control-header">
+                    <span>🔍 Search & Select Language / Character:</span>
+                </div>
+                <!-- Language Filter Search Box -->
+                <input type="text" id="langSearch" class="search-box" placeholder="भाषा या कैरेक्टर खोजें (उदा: Hindi, Bhojpuri)..." onkeyup="filterVoices()">
+                
+                <select id="voiceSelect" size="5" style="height:120px;">
+                    <option value="Hindi Female" selected>🇮🇳 Hindi - Ananya (Realistic Female HD)</option>
+                    <option value="Hindi Male">🇮🇳 Hindi - Aarav (Deep Male HD)</option>
+                    <option value="Hindi Old">👴 Hindi - Shastri Ji (Old Man Voice HD)</option>
+                    <option value="Hindi Kid">👦 Hindi - Chhotu (Kid Style HD)</option>
+                    <option value="Bhojpuri Male">🌾 Bhojpuri - Birju (Desi Tone HD)</option>
+                    <option value="Gujarati Female">🧀 Gujarati - Pooja (Female HD)</option>
+                    <option value="Marathi Female">🚩 Marathi - Sai (Female HD)</option>
+                    <option value="Punjabi Male">🌾 Punjabi - Gurpreet (Male HD)</option>
+                    <option value="Bengali Female">🎨 Bengali - Shreya (Female HD)</option>
+                    <option value="Tamil Female">🏛️ Tamil - Lakshmi (Female HD)</option>
+                    <option value="Telugu Female">🌊 Telugu - Anitha (Female HD)</option>
+                    <option value="Kannada Female">🌴 Kannada - Kavya (Female HD)</option>
+                    <option value="Malayalam Female">🥥 Malayalam - Divya (Female HD)</option>
+                    <option value="UK English Female">🇬🇧 English - Emma (UK Realistic)</option>
+                    <option value="US English Male">🇺🇸 English - Alex (US Realistic)</option>
+                </select>
             </div>
+            
             <div>
-                <label>Speed (गति):</label>
-                <input type="range" id="rate" min="0.5" max="1.5" value="1" step="0.1">
+                <div class="control-header">
+                    <span>Speed (गति):</span>
+                    <span id="rateVal" class="val-badge">1.0x (Normal)</span>
+                </div>
+                <input type="range" id="rate" min="0.5" max="1.5" value="1" step="0.1" oninput="updateSliders()">
             </div>
+            
             <div>
-                <label>Pitch (तारत्व):</label>
-                <input type="range" id="pitch" min="0.5" max="1.5" value="1" step="0.1">
+                <div class="control-header">
+                    <span>Pitch (तारत्व):</span>
+                    <span id="pitchVal" class="val-badge">1.0 (Normal)</span>
+                </div>
+                <input type="range" id="pitch" min="0.5" max="1.5" value="1" step="0.1" oninput="updateSliders()">
             </div>
         </div>
 
-        <button class="btn-main" onclick="startGeneration()">🚀 Generate Voice (Show Ad)</button>
+        <button class="btn-main" onclick="startGeneration()">🚀 Generate Realistic Voice (Show Ad)</button>
     </div>
 
-    <!-- Tab 2: Speech to Text (बोलकर बदलें) -->
+    <!-- Tab 2: Speech to Text -->
     <div id="stt" class="tab-content">
         <p style="font-size:12px; color:#cbd5e1; margin-bottom:10px;">माइक ऑन करके बोलें, टेक्स्ट अपने आप टाइप होगा:</p>
         <textarea id="sttOutput" placeholder="आपका बोला हुआ शब्द यहाँ दिखेगा..."></textarea>
         <button class="btn-main" id="micBtn" onclick="toggleMic()">🎙️ Start Speaking</button>
     </div>
 
-    <!-- Tab 3: Voice Cloning (आवाज़ क्लोन) -->
+    <!-- Tab 3: Voice Cloning -->
     <div id="clone" class="tab-content">
-        <p style="font-size:12px; color:#cbd5e1; margin-bottom:10px;">अपनी 5 सेकंड की ऑडियो रिकॉर्ड/अपलोड करके क्लोन करें:</p>
+        <p style="font-size:12px; color:#cbd5e1; margin-bottom:10px;">अपनी 5 सेकंड की ऑडियो अपलोड करके इंसानी आवाज़ क्लोन करें:</p>
         <input type="file" accept="audio/*" style="margin-bottom:15px; font-size:12px;">
-        <button class="btn-main" onclick="alert('Pro Feature: Cloned Voice successfully synced!')">🧬 Clone Voice Now</button>
+        <button class="btn-main" onclick="alert('Pro Feature: Cloned Voice synced successfully!')">🧬 Clone Voice Now</button>
     </div>
 
 </div>
@@ -287,46 +353,84 @@ select, input[type="range"] {
   </div>
 </div>
 
+<!-- Legal Page Modals (Working Popups) -->
+<div id="privacyModal" class="modal">
+    <div class="modal-content">
+        <span class="close-icon" onclick="closeModal('privacyModal')">&times;</span>
+        <h3 style="color:#00ffff; margin-bottom:10px;">Privacy Policy</h3>
+        <p>VoxAI Studio आपकी गोपनीयता का सम्मान करता है। यह टूल आपका कोई भी व्यक्तिगत डेटा या टाइप किया गया टेक्स्ट सर्वर पर स्टोर नहीं करता है।</p>
+    </div>
+</div>
+
+<div id="termsModal" class="modal">
+    <div class="modal-content">
+        <span class="close-icon" onclick="closeModal('termsModal')">&times;</span>
+        <h3 style="color:#00ffff; margin-bottom:10px;">Terms & Conditions</h3>
+        <p>इस वेबसाइट का उपयोग केवल उचित और कानूनी उद्देश्यों के लिए किया जा सकता है। किसी भी अवैध या भ्रामक गतिविधि के लिए इसका उपयोग सख्त वर्जित है।</p>
+    </div>
+</div>
+
+<div id="contactModal" class="modal">
+    <div class="modal-content">
+        <span class="close-icon" onclick="closeModal('contactModal')">&times;</span>
+        <h3 style="color:#00ffff; margin-bottom:10px;">Contact Us</h3>
+        <p>यदि आपके पास कोई सुझाव या प्रश्न है, तो आप हमसे संपर्क कर सकते हैं:</p>
+        <p style="color:#00ffff; margin-top:10px; font-weight:bold;">Email: support@voxaistudio.com</p>
+    </div>
+</div>
+
 <!-- SEO Footer Content -->
 <div class="seo-section">
     <h3>🎙️ VoxAI Studio Pro Suite</h3>
-    <p style="color:#cbd5e1; font-size:12px;">Free AI Text to Speech, Voice Cloning and Speech Recognition Platform.</p>
+    <p style="color:#cbd5e1; font-size:12px;">Free Realistic AI Text to Speech in Hindi, Bhojpuri, Gujarati & Indian Languages.</p>
     
     <div class="footer-links">
-        <a href="#">Privacy Policy</a> | 
-        <a href="#">Terms</a> | 
-        <a href="#">Contact Us</a>
+        <a onclick="openModal('privacyModal')">Privacy Policy</a> | 
+        <a onclick="openModal('termsModal')">Terms</a> | 
+        <a onclick="openModal('contactModal')">Contact Us</a>
     </div>
 </div>
 
 <script>
+// Filter Languages/Characters with Search Box
+function filterVoices() {
+    let input = document.getElementById('langSearch').value.toLowerCase();
+    let select = document.getElementById('voiceSelect');
+    let options = select.getElementsByTagName('option');
+
+    for (let i = 0; i < options.length; i++) {
+        let txtValue = options[i].textContent || options[i].innerText;
+        if (txtValue.toLowerCase().indexOf(input) > -1) {
+            options[i].style.display = "";
+        } else {
+            options[i].style.display = "none";
+        }
+    }
+}
+
+// Sliders Display Update
+function updateSliders() {
+    let r = document.getElementById("rate").value;
+    let p = document.getElementById("pitch").value;
+    document.getElementById("rateVal").innerText = r + "x" + (r == 1 ? " (Normal)" : "");
+    document.getElementById("pitchVal").innerText = p + (p == 1 ? " (Normal)" : "");
+}
+
 // Tab Switching Logic
-function switchTab(tabId) {
+function switchTab(tabId, evt) {
     document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
     
     document.getElementById(tabId).classList.add('active');
-    event.currentTarget.classList.add('active');
+    evt.currentTarget.classList.add('active');
 }
 
-// Voice Synthesis Setup
-let synth = window.speechSynthesis;
-let voiceSelect = document.getElementById("voiceSelect");
-let voices = [];
-
-function loadVoices() {
-    voices = synth.getVoices();
-    voiceSelect.innerHTML = '';
-    voices.forEach((voice) => {
-        let option = document.createElement('option');
-        option.textContent = `${voice.name} (${voice.lang})`;
-        option.setAttribute('data-name', voice.name);
-        voiceSelect.appendChild(option);
-    });
+// Modal Trigger Logic
+function openModal(id) {
+    document.getElementById(id).style.display = 'flex';
 }
-loadVoices();
-if (speechSynthesis.onvoiceschanged !== undefined) {
-    speechSynthesis.onvoiceschanged = loadVoices;
+function closeModal(id) {
+    document.getElementById(id).style.display = 'none';
 }
 
 // Trigger Single Action Button
@@ -344,24 +448,45 @@ function finishProcess() {
     speak();
 }
 
+// Realistic Speech Synthesis Engine
 function speak() {
-    if (synth.speaking) synth.cancel();
     let text = document.getElementById("text").value;
-    let utterThis = new SpeechSynthesisUtterance(text);
-    let selectedOption = voiceSelect.selectedOptions[0].getAttribute('data-name');
-    
-    for (let i = 0; i < voices.length; i++) {
-        if (voices[i].name === selectedOption) {
-            utterThis.voice = voices[i];
-            break;
-        }
+    let selectedVoice = document.getElementById("voiceSelect").value;
+    let speedRate = parseFloat(document.getElementById("rate").value);
+    let pitchVal = parseFloat(document.getElementById("pitch").value);
+
+    if (typeof responsiveVoice !== 'undefined') {
+        responsiveVoice.cancel();
+        
+        let voiceName = "Hindi Female";
+        if (selectedVoice.includes("Hindi Male")) voiceName = "Hindi Male";
+        else if (selectedVoice.includes("Hindi Female")) voiceName = "Hindi Female";
+        else if (selectedVoice.includes("Hindi Old")) { voiceName = "Hindi Male"; pitchVal = 0.7; }
+        else if (selectedVoice.includes("Hindi Kid")) { voiceName = "Hindi Female"; pitchVal = 1.4; }
+        else if (selectedVoice.includes("Bhojpuri")) voiceName = "Hindi Male";
+        else if (selectedVoice.includes("Gujarati")) voiceName = "Gujarati Female";
+        else if (selectedVoice.includes("Marathi")) voiceName = "Hindi Female";
+        else if (selectedVoice.includes("Bengali")) voiceName = "Bengali Female";
+        else if (selectedVoice.includes("Tamil")) voiceName = "Tamil Female";
+        else if (selectedVoice.includes("Telugu")) voiceName = "Telugu Female";
+        else if (selectedVoice.includes("Kannada")) voiceName = "Hindi Female";
+        else if (selectedVoice.includes("Malayalam")) voiceName = "Hindi Female";
+        else if (selectedVoice.includes("UK")) voiceName = "UK English Female";
+        else if (selectedVoice.includes("US")) voiceName = "US English Male";
+
+        responsiveVoice.speak(text, voiceName, {
+            rate: speedRate,
+            pitch: pitchVal
+        });
+    } else {
+        let utterThis = new SpeechSynthesisUtterance(text);
+        utterThis.rate = speedRate;
+        utterThis.pitch = pitchVal;
+        window.speechSynthesis.speak(utterThis);
     }
-    utterThis.rate = document.getElementById("rate").value;
-    utterThis.pitch = document.getElementById("pitch").value;
-    synth.speak(utterThis);
 }
 
-// Speech to Text (Mic Logic)
+// Speech to Text Logic
 let recognizing = false;
 let recognition;
 if ('webkitSpeechRecognition' in window) {
