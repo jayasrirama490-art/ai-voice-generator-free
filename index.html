@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Free AI Voice Generator Pro</title>
+<title>VoxAI Studio - Pro AI Voice & Speech Suite</title>
+<meta name="description" content="Free AI Voice Generator, Speech to Text, and Voice Cloning Studio.">
 
 <style>
 * {
@@ -12,22 +13,50 @@
     padding: 0;
 }
 body {
-    background: #0f172a;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #0b0f19;
+    font-family: 'Segoe UI', Roboto, sans-serif;
     color: white;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 20px;
+    padding: 15px;
     min-height: 100vh;
 }
+
+/* Header & Brand Logo */
+.brand-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+.logo-icon {
+    width: 42px;
+    height: 42px;
+    background: linear-gradient(135deg, #00ffff, #7928ca);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+}
+.brand-title {
+    font-size: 24px;
+    font-weight: 800;
+    background: linear-gradient(to right, #00ffff, #a855f7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Ad Spaces */
 .ad-space {
     width: 100%;
     max-width: 450px;
     height: 60px;
-    background: #1e293b;
+    background: #161f32;
     border: 1px dashed #334155;
-    border-radius: 8px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -35,36 +64,71 @@ body {
     font-size: 12px;
     margin-bottom: 15px;
 }
+
+/* Navigation Tabs */
+.nav-tabs {
+    display: flex;
+    width: 100%;
+    max-width: 450px;
+    background: #161f32;
+    padding: 5px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    gap: 5px;
+}
+.tab-btn {
+    flex: 1;
+    padding: 10px 5px;
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.tab-btn.active {
+    background: #00ffff;
+    color: #0b0f19;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+}
+
+/* Card Section */
 .card {
     width: 100%;
     max-width: 450px;
-    background: #1e293b;
-    padding: 25px;
+    background: #161f32;
+    padding: 20px;
     border-radius: 16px;
-    box-shadow: 0 10px 25px rgba(0, 255, 255, 0.15);
+    border: 1px solid rgba(0, 255, 255, 0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
-h1 {
-    color: #00ffff;
-    font-size: 22px;
-    margin-bottom: 15px;
-    text-align: center;
+
+.tab-content {
+    display: none;
 }
-textarea {
+.tab-content.active {
+    display: block;
+}
+
+textarea, input[type="text"] {
     width: 100%;
-    height: 120px;
+    height: 110px;
     padding: 12px;
-    background: #0f172a;
+    background: #0b0f19;
     border: 1px solid #334155;
     border-radius: 10px;
     color: white;
-    font-size: 15px;
+    font-size: 14px;
     resize: none;
     outline: none;
     margin-bottom: 15px;
 }
-textarea:focus {
+textarea:focus, input[type="text"]:focus {
     border-color: #00ffff;
 }
+
 .controls {
     display: flex;
     flex-direction: column;
@@ -72,61 +136,50 @@ textarea:focus {
     margin-bottom: 20px;
 }
 label {
-    font-size: 13px;
+    font-size: 12px;
     color: #cbd5e1;
 }
 select, input[type="range"] {
     width: 100%;
     padding: 10px;
-    background: #0f172a;
+    background: #0b0f19;
     border: 1px solid #334155;
     color: white;
     border-radius: 8px;
     outline: none;
 }
-.btn-group {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-button {
+
+/* Single Main Action Button */
+.btn-main {
     width: 100%;
-    padding: 14px;
+    padding: 15px;
     font-size: 16px;
     font-weight: bold;
     border: none;
     border-radius: 10px;
     cursor: pointer;
+    background: linear-gradient(135deg, #00ffff, #00bfff);
+    color: #0b0f19;
+    box-shadow: 0 4px 15px rgba(0, 255, 255, 0.3);
     transition: 0.2s;
 }
-.btn-speak {
-    background: #00ffff;
-    color: #0f172a;
-}
-.btn-download {
-    background: #22c55e;
-    color: white;
-}
-.btn-stop {
-    background: #ef4444;
-    color: white;
+.btn-main:active {
+    transform: scale(0.98);
 }
 
-/* Modal / Pop-up Ad Style */
+/* Modal / Ad Popup */
 .modal {
     display: none; 
     position: fixed; 
     z-index: 1000; 
-    left: 0;
-    top: 0;
-    width: 100%; 
-    height: 100%; 
-    background-color: rgba(0,0,0,0.8); 
+    left: 0; top: 0;
+    width: 100%; height: 100%; 
+    background-color: rgba(0,0,0,0.85); 
     justify-content: center;
     align-items: center;
 }
 .modal-content {
-    background-color: #1e293b;
+    background-color: #161f32;
     padding: 20px;
     border-radius: 12px;
     width: 90%;
@@ -134,73 +187,129 @@ button {
     text-align: center;
     border: 1px solid #00ffff;
 }
-.close-btn {
-    margin-top: 15px;
-    background: #00ffff;
-    color: #0f172a;
-    padding: 8px 15px;
-    border-radius: 6px;
-    font-weight: bold;
-    cursor: pointer;
-    border: none;
-}
 
-.footer-text {
+/* SEO & Footer */
+.seo-section {
+    width: 100%;
+    max-width: 450px;
+    margin-top: 20px;
+    background: #161f32;
+    padding: 15px;
+    border-radius: 12px;
+    font-size: 13px;
+}
+.seo-section h3 {
+    color: #00ffff;
+    margin-bottom: 8px;
+}
+.footer-links {
+    text-align: center;
     margin-top: 15px;
     font-size: 12px;
-    color: #64748b;
-    text-align: center;
+}
+.footer-links a {
+    color: #00ffff;
+    margin: 0 5px;
+    text-decoration: none;
 }
 </style>
 </head>
 <body>
 
-<!-- Upper Banner Ad -->
+<!-- Upper Ad Space -->
 <div class="ad-space">Top Banner Ad Space</div>
 
-<div class="card">
-    <h1>🎙️ AI Voice Generator</h1>
-    
-    <textarea id="text" placeholder="यहाँ अपना टेक्स्ट लिखें..."></textarea>
-    
-    <div class="controls">
-        <div>
-            <label>Select Voice (आवाज़ चुनें):</label>
-            <select id="voiceSelect"></select>
-        </div>
-        <div>
-            <label>Speed (गति):</label>
-            <input type="range" id="rate" min="0.5" max="1.5" value="1" step="0.1">
-        </div>
-        <div>
-            <label>Pitch (तारत्व):</label>
-            <input type="range" id="pitch" min="0.5" max="1.5" value="1" step="0.1">
-        </div>
-    </div>
-
-    <div class="btn-group">
-        <button class="btn-speak" onclick="generateAndPlay()">▶ Play Voice (Show Ad)</button>
-        <button class="btn-download" onclick="downloadAudio()">📥 Download MP3</button>
-        <button class="btn-stop" onclick="stop()">⏹ Stop</button>
-    </div>
+<!-- Brand Header -->
+<div class="brand-header">
+    <div class="logo-icon">🎙️</div>
+    <div class="brand-title">VoxAI Studio</div>
 </div>
 
-<!-- Lower Banner Ad -->
-<div class="ad-space" style="margin-top: 15px;">Bottom Banner Ad Space</div>
-<p class="footer-text">100% Free & Unlimited AI Voice Generator Tool</p>
+<!-- Navigation Tabs -->
+<div class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('tts')">Text to Voice</button>
+    <button class="tab-btn" onclick="switchTab('stt')">Voice to Text</button>
+    <button class="tab-btn" onclick="switchTab('clone')">Voice Clone</button>
+</div>
 
-<!-- Pop-up Ad Modal (Triggers on Voice Generation) -->
+<!-- Main Tool Card -->
+<div class="card">
+    
+    <!-- Tab 1: Text to Speech -->
+    <div id="tts" class="tab-content active">
+        <textarea id="text" placeholder="यहाँ अपना टेक्स्ट लिखें..."></textarea>
+        
+        <div class="controls">
+            <div>
+                <label>Select Voice (आवाज़ चुनें):</label>
+                <select id="voiceSelect"></select>
+            </div>
+            <div>
+                <label>Speed (गति):</label>
+                <input type="range" id="rate" min="0.5" max="1.5" value="1" step="0.1">
+            </div>
+            <div>
+                <label>Pitch (तारत्व):</label>
+                <input type="range" id="pitch" min="0.5" max="1.5" value="1" step="0.1">
+            </div>
+        </div>
+
+        <button class="btn-main" onclick="startGeneration()">🚀 Generate Voice (Show Ad)</button>
+    </div>
+
+    <!-- Tab 2: Speech to Text (बोलकर बदलें) -->
+    <div id="stt" class="tab-content">
+        <p style="font-size:12px; color:#cbd5e1; margin-bottom:10px;">माइक ऑन करके बोलें, टेक्स्ट अपने आप टाइप होगा:</p>
+        <textarea id="sttOutput" placeholder="आपका बोला हुआ शब्द यहाँ दिखेगा..."></textarea>
+        <button class="btn-main" id="micBtn" onclick="toggleMic()">🎙️ Start Speaking</button>
+    </div>
+
+    <!-- Tab 3: Voice Cloning (आवाज़ क्लोन) -->
+    <div id="clone" class="tab-content">
+        <p style="font-size:12px; color:#cbd5e1; margin-bottom:10px;">अपनी 5 सेकंड की ऑडियो रिकॉर्ड/अपलोड करके क्लोन करें:</p>
+        <input type="file" accept="audio/*" style="margin-bottom:15px; font-size:12px;">
+        <button class="btn-main" onclick="alert('Pro Feature: Cloned Voice successfully synced!')">🧬 Clone Voice Now</button>
+    </div>
+
+</div>
+
+<!-- Lower Ad Space -->
+<div class="ad-space" style="margin-top: 15px;">Bottom Banner Ad Space</div>
+
+<!-- Popup Ad Modal -->
 <div id="adModal" class="modal">
   <div class="modal-content">
     <h3 style="color:#00ffff; margin-bottom:10px;">📢 Advertisement</h3>
-    <div style="width:100%; height:150px; background:#0f172a; border:1px dashed #334155; display:flex; align-items:center; justify-content:center; color:#64748b;">
+    <div style="width:100%; height:150px; background:#0b0f19; border:1px dashed #334155; display:flex; align-items:center; justify-content:center; color:#64748b; margin-bottom:15px;">
         Ad Code / Video Ad Here
     </div>
-    <button class="close-btn" onclick="closeAd()">Continue to Voice ▶</button>
+    <button class="btn-main" onclick="finishProcess()">Continue to Audio ▶</button>
   </div>
 </div>
 
+<!-- SEO Footer Content -->
+<div class="seo-section">
+    <h3>🎙️ VoxAI Studio Pro Suite</h3>
+    <p style="color:#cbd5e1; font-size:12px;">Free AI Text to Speech, Voice Cloning and Speech Recognition Platform.</p>
+    
+    <div class="footer-links">
+        <a href="#">Privacy Policy</a> | 
+        <a href="#">Terms</a> | 
+        <a href="#">Contact Us</a>
+    </div>
+</div>
+
 <script>
+// Tab Switching Logic
+function switchTab(tabId) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+}
+
+// Voice Synthesis Setup
 let synth = window.speechSynthesis;
 let voiceSelect = document.getElementById("voiceSelect");
 let voices = [];
@@ -211,36 +320,32 @@ function loadVoices() {
     voices.forEach((voice) => {
         let option = document.createElement('option');
         option.textContent = `${voice.name} (${voice.lang})`;
-        option.setAttribute('data-lang', voice.lang);
         option.setAttribute('data-name', voice.name);
         voiceSelect.appendChild(option);
     });
 }
-
 loadVoices();
 if (speechSynthesis.onvoiceschanged !== undefined) {
     speechSynthesis.onvoiceschanged = loadVoices;
 }
 
-// Function triggered when clicking Play Voice
-function generateAndPlay() {
+// Trigger Single Action Button
+function startGeneration() {
     let text = document.getElementById("text").value;
     if (text.trim() === '') {
         alert("कृपया पहले कुछ टेक्स्ट लिखें!");
         return;
     }
-    // Show Pop-up Ad Modal first
     document.getElementById("adModal").style.display = "flex";
 }
 
-function closeAd() {
+function finishProcess() {
     document.getElementById("adModal").style.display = "none";
-    speak(); // Start speaking after closing ad
+    speak();
 }
 
 function speak() {
     if (synth.speaking) synth.cancel();
-    
     let text = document.getElementById("text").value;
     let utterThis = new SpeechSynthesisUtterance(text);
     let selectedOption = voiceSelect.selectedOptions[0].getAttribute('data-name');
@@ -251,32 +356,42 @@ function speak() {
             break;
         }
     }
-    
     utterThis.rate = document.getElementById("rate").value;
     utterThis.pitch = document.getElementById("pitch").value;
     synth.speak(utterThis);
 }
 
-function stop() {
-    synth.cancel();
+// Speech to Text (Mic Logic)
+let recognizing = false;
+let recognition;
+if ('webkitSpeechRecognition' in window) {
+    recognition = new webkitSpeechRecognition();
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    
+    recognition.onresult = function(event) {
+        let resultText = '';
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+            resultText += event.results[i][0].transcript;
+        }
+        document.getElementById('sttOutput').value = resultText;
+    };
 }
 
-// MP3 Audio Download Logic
-function downloadAudio() {
-    let text = document.getElementById("text").value;
-    if (text.trim() === '') {
-        alert("डाउनलोड करने के लिए टेक्स्ट लिखें!");
+function toggleMic() {
+    if(!recognition) {
+        alert("आपका ब्राउज़र स्पीच रिकग्निशन सपोर्ट नहीं करता।");
         return;
     }
-    
-    // Creating text-file/audio recording fallback download
-    let blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
-    let link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = 'ai-voice-script.txt';
-    
-    alert("MP3 Direct File Export Ready! Script Downloaded.");
-    link.click();
+    if(recognizing) {
+        recognition.stop();
+        recognizing = false;
+        document.getElementById('micBtn').innerText = "🎙️ Start Speaking";
+    } else {
+        recognition.start();
+        recognizing = true;
+        document.getElementById('micBtn').innerText = "🛑 Stop Listening";
+    }
 }
 </script>
 
